@@ -5,6 +5,6 @@ Reference paper : *"Signature Trading: A Path-Dependent Extension of the Mean-Va
 
 link : https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4541830
 
-start : March 16, 2024
-end : 
+start : March 16, 2024 -- end : 
+
 
