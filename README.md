@@ -1,4 +1,5 @@
 # Research-on-trading-strategy-based-on-signature
+
 Study and implementation of research paper dealing with application of signature concept in quantitative trading strategies building.
 
 Reference paper : *"Signature Trading: A Path-Dependent Extension of the Mean-Variance Framework with Exogenous Signals"* by Futter ,Horvath and Wiese.
