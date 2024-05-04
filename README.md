@@ -1,4 +1,4 @@
-# Research-signature-based-trading-strategy
+# Research-on-signature-based-trading-strategy
 
 Study and implementation of research paper dealing with application of signature concept in quantitative trading strategies building.
 
