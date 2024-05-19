@@ -304,7 +304,7 @@ class Signature_Trading(object):
         
         for t in range(minimum_steps, T):
             Z_t = Z[:t, :]  # we only look at information up to now
-            ZZ_t = useful.get_signature(Z_t, self.depth, no_batch=True)
+            ZZ_t = useful.get_signature(Z_t, self.depth, with_batch=True)
             for m in range(self.d):
                 xi[t, m] = torch.dot(self.l[m], ZZ_t)
 
@@ -396,3 +396,65 @@ class Get_data_Markowitz:
 
     def param(self):
         return self.mu,self.cov,self.n_trading_days,self.len_points,self.batch_len
+    
+    
+def mean_reversion_data(T: int, dt: float, X_0: float, sigma_x: float, k: float,batch_len: int) -> torch.Tensor:
+
+    N = int(T / dt) # number of points
+    mean_revert_paths = torch.zeros(batch_len, N) ; mean_revert_paths[:, 0] = 0
+    for i in range(1,N):
+        mean_revert_paths[:, i] = mean_revert_paths[:, i - 1] - k*mean_revert_paths[:, i - 1]*dt + sigma_x*torch.randn(batch_len)*np.sqrt(dt)
+
+    return mean_revert_paths.reshape(batch_len, N, 1)
+
+def OU_data(T: int, dt: float, X_0: float, Y_0: float, sigma_X: float, sigma_Y: float, k: float,batch_len: int) -> torch.Tensor:
+    """
+    Generate  Ornstein-Uhlenbeck sample 
+    """
+    d = 2 # two assets
+    num_points = int(T/dt) # number of points 
+    sample_paths = torch.zeros(batch_len, num_points, d)
+    sample_paths[:,:,0] = X_0
+    sample_paths[:,:,1] = Y_0
+
+    for i in range(1,num_points):
+        
+        sample_paths[:,i,0] = sample_paths[:,i-1,0] + sigma_X*torch.randn(batch_len)*np.sqrt(dt)
+        sample_paths[:,i,1] = sample_paths[:,i-1,1] + sigma_Y*torch.randn(batch_len)*np.sqrt(dt) + k*(sample_paths[:,i-1,0] - sample_paths[:,i-1,1])*dt
+
+    return sample_paths
+
+
+
+##### data for exogenous signal
+
+def K(alpha,t,s): 
+    """
+    Exponential kernel (decaying function).
+    """
+    return np.exp(-alpha*(t-s))
+
+def Get_synthetic_data(k, sigma_f, alpha, sigma_X, T, dt, batch_len,X_0):
+    """
+    Getting data with exogenous signal.
+    """
+    N=int(T/dt)
+    f=torch.zeros(batch_len,N+1) # exogenous signal
+    X=torch.zeros(batch_len,N+1) # price process
+    Z=torch.zeros(batch_len,N+1) # market factor 
+    df=torch.zeros(batch_len,N)  # df_{t}
+    f[:,0]=0
+    X[:,0]=X_0
+    
+
+    for i in range(N):
+        df_intermediaire= (- k) * f[:, i]*dt + sigma_f * torch.randn(batch_len)*np.sqrt(dt)
+        df[:,i]=df_intermediaire
+        f[:,i+1]=f[:,i]+df_intermediaire
+
+    for i in range(N):
+        Z[:,i]= torch.sum(K(alpha,dt*i,dt*torch.arange(i))*df[:,:i],dim=1)
+        dX = 10 * Z[:,i] * dt + sigma_X * torch.randn(batch_len)*np.sqrt(dt)
+        X[:, i+1] = X[:, i] + dX
+    
+    return X.unsqueeze(2), f.unsqueeze(2),Z.unsqueeze(2)
