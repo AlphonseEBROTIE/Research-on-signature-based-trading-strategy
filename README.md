@@ -9,3 +9,7 @@ Reference paper : *"Signature Trading: A Path-Dependent Extension of the Mean-Va
 start : March 16, 2024 -- end : May 20, 2024 .
 
 
+To calculate signatures with the package, you will need to use a good combination of python/pytorch/signatory (as far as I know, not all combinations work). For example :<code>Python 3.8.0</code>, <code>torch==1.7.1</code> and <code>signatory==1.2.4.1.7.1</code> works.
+
+
+
