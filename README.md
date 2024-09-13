@@ -2,11 +2,11 @@
 
 Study and implementation of research paper dealing with application of signature concept in quantitative trading strategies building.
 
-Reference paper : *"Signature Trading: A Path-Dependent Extension of the Mean-Variance Framework with Exogenous Signals"* by Futter ,Horvath and Wiese.
+Reference paper : *"Signature Trading: A Path-Dependent Extension of the Mean-Variance Framework with Exogenous Signals"* by Futter, Horvath and Wiese.
 
 *link :* https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4541830
 
-start : March 16, 2024 -- end : May 20, 2024 .
+start : March 16, 2024 -- end : May 20, 2024.
 
 
 <h2 style="color:black">Note :</h2>
